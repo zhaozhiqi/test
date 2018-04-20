@@ -7,24 +7,32 @@
     <title>canvas</title>
 </head>
 <body>
-    <h1>canvas-1</h1>
+    <!-- <h1>canvas-1</h1> -->
     <canvas id="drawing" width="200" height="200"></canvas>
 
     <script>
         var drawing = document.getElementById('drawing');
         if(drawing.getContext){
-            var contest = drawing.getContext("2d");
-            // contest.fillStyle = "#f00";
-            // contest.fillRect(10,10,50,50);
+            var context = drawing.getContext("2d");
+        //绘制矩形    
+        /*    // context.fillStyle = "#f00";
+            // context.fillRect(10,10,50,50);
 
-            // contest.fillStyle = "rgba(0,0,255,0.5)";            
-            // contest.fillRect(30,30,50,50);
+            // context.fillStyle = "rgba(0,0,255,0.5)";            
+            // context.fillRect(30,30,50,50);
             
-            contest.strokeStyle = "#f60";
-            contest.strokeRect(10,10,50,50);
+            context.strokeStyle = "#f60";
+            context.strokeRect(10,10,50,50);
+            // context.lineCap = 'butt';//线末端形状 平头
+            // context.lineCap = 'round';//线末端形状 圆头
+            // context.lineCap = 'square';//线末端形状 方头
+            // context.lineJoin = "round";//相交方式 圆交
+            // context.lineJoin = "bevel";//相交方式 斜交
+            // context.lineJoin = "miter";//相交方式 斜接
 
-            contest.strokeStyle = "rgba(0,0,255,0.5)";            
-            contest.strokeRect(30,30,50,50);                
+            context.lineWidth = '10';//线宽
+            context.strokeStyle = "rgba(0,0,255,0.5)";            
+            context.strokeRect(30,30,50,50);                
             
             
             // var imgURL = drawing.toDataURL("image/png");
@@ -32,6 +40,24 @@
             // var image = document.createElement('img');
             // image.src = imgURL;
             // document.body.appendChild(image);
+
+
+            
+
+            //context.fillStyle = "#ff0000";
+            //context.fillRect(10, 10, 50, 50);//绘制红色矩形            
+
+            //context.fillStyle = "rgba(0,0,255,0.5)";
+            //context.fillRect(30, 30, 50, 50);//绘制半透明的蓝色矩形            
+
+            //context.clearRect(40, 40, 10, 10); //在两个矩形重叠的地方清除一个小矩形
+        */
+
+        //绘制路径   
+        /**/
+        
+
+
         }
     </script>
     <script src="bundle.js"></script>
