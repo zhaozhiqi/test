@@ -21,7 +21,7 @@ module.exports = {
     }]
   },
   devServer: {
-    contentBase: './',
+    contentBase: [path.join(__dirname, "dist"), path.join(__dirname, "src")],
     watchContentBase: true
   }
 };
