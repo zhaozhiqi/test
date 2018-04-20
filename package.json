@@ -1,0 +1,25 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "My test",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "webpack-dev-server",
+    "start":"./node_modules/webpack-dev-server/bin/webpack-dev-server.js"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "ZhaoNIuNiu\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[3~i\u001b[C\u001b[C\u001b[C\u001b\u001b[D\u001b[B\u001b\u001b[3~\u001b[3~\u001b[C\u001b[C\u001b[N",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^0.28.11",
+    "node-sass": "^4.8.3",
+    "sass-loader": "^7.0.1",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.14",
+    "webpack-dev-server": "^3.1.3"
+  }
+}
