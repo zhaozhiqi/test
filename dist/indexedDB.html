@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>indexedDB</title>
+</head>
+
+<body>
+    <script>
+        var indexedDB = window.indexedDB || window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB;
+        console.log(indexedDB, 'indexedDB');
+        var db, request, database;
+
+        request = indexedDB.open("admin");
+        request.onerror = function (event) {
+            alert("error" + event.target.errorCode);
+        }
+        request.onsuccess = function (event) {
+            database = event.target.result;
+            console.log(database, 'database')
+            if (database.version != "1.0") {
+                request = database.setVersion("1.0");
+                request.onerror = function (event) {
+                    alert("Something bad happened while trying to set version: " +
+                        event.target.errorCode);
+                };
+                request.onsuccess = function (event) {
+                    alert("Database initialization complete. Database name: " + database.name +
+                        ", Version: " + database.version);
+                };
+            } else {
+                alert("Database already initialized. Database name: " + database.name +
+                    ", Version: " + database.version);
+            }
+        }
+
+        database.onerror = function(event) {
+            // Generic error handler for all errors targeted at this database's
+            // requests!
+            alert("Database error: " + event.target.errorCode);
+        };
+        
+        var user = {
+            username: "007",
+            firstName: "James",
+            lastName: "Bond",
+            password: "foo"
+        }; 
+
+        var store = database.createObjectStore("users", {keypath: "username"});
+
+
+    </script>
+</body>
+
+</html>

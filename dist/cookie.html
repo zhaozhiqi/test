@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cookie</title>
+</head>
+
+<body>
+    <!-- <h1>Cookie</h1> -->
+    <script>
+        //encodeURIComponent 保证name 与 value 值能够以URL编码 不会报错
+        //document.cookie = encodeURIComponent("test") + "=" + encodeURIComponent("testValue");
+        //继续添加其他信息
+        //document.cookie = encodeURIComponent("test1") + "="  + encodeURIComponent("testValue1") + "; domain=.wrox.com;path=/";
+
+        //封装
+        var CookieUtil = {
+            get: function (name) {
+                var cookieName = encodeURIComponent(name) + "=",
+                    cookieStart = document.cookie.indexOf(cookieName),
+                    cookieValue = null;
+                if (cookieStart > -1) {
+                    var cookieEnd = document.cookie.indexOf(";", cookieStart);
+                    if (cookieEnd == -1) {
+                        cookieEnd = document.cookie.length;
+                    }
+                    cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, cookieEnd));
+                }
+
+                return cookieValue;
+            },
+
+            set: function (name, value, path, domain, expires, secure) {
+                var cookieText = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+                if (path) {
+                    cookieText += "; path=" + path;
+                }
+
+                if (domain) {
+                    cookieText += "; domain=" + domain;
+                }
+
+                if (expires instanceof Date) {
+                    cookieText += "; expires=" + expires.toGMTString();
+                }
+                if (secure) {
+                    cookieText += "; secure";
+                }
+
+                console.log(cookieText, 'cookieText')
+                document.cookie = cookieText;
+            },
+
+            unset: function (name, path, domain, secure) {
+                this.set(name, "", new Date(0), path, domain, secure);
+            }
+
+        }
+
+        console.log('1')
+        //设置cookie
+        CookieUtil.set("setName", "Valueset", null, null, new Date("January 1, 2020"));
+        CookieUtil.set("setName1", "setValue1");
+
+        //读取cookie 
+        CookieUtil.get("setName")
+        CookieUtil.get("setName1");
+
+        //删除cookie 注：因为没有删除cookie处理方法 故找到该cookie值并将失效时间设置为当前即立刻失效达到=删除效果
+        CookieUtil.unset("setName1")
+
+        //设置 cookie，包括它的路径、域、失效日期
+        //CookieUtil.set("name", "Nicholas", "/books/projs/", "http://localhost",new Date("January 1, 2010"));
+        //删除刚刚设置的 cookie
+        //CookieUtil.unset("name", "/books/projs/", "http://localhost");
+        //设置安全的 cookie
+        //CookieUtil.set("name", "Nicholas", null, null, null, true); 
+
+
+        //子cookie
+
+        var SubCookieUtil = {
+            get: function (name, subName) {
+                var subCookies = this.getAll(name);
+                if (subCookies) {
+                    return subCookies[subName];
+                } else {
+                    return null;
+                }
+            },
+
+            getAll: function (name) {
+                var cookieName = encodeURIComponent(name) + "=",
+                    cookieStart = document.cookie.indexOf(cookieName),
+                    cookieValue = null,
+                    cookieEnd,
+                    subCookies,
+                    i,
+                    parts,
+                    result = {};
+
+                if (cookieStart > -1) {
+                    cookieEnd = document.cookie.indexOf(";", cookieStart);
+                    if (cookieEnd == -1) {
+                        cookieEnd = document.cookie.length;
+                    }
+                    cookieValue = document.cookie.substring(cookieStart + cookieName.length, cookieEnd);
+
+                    if (cookieValue.length > 0) {
+                        subCookies = cookieValue.split("&");
+
+                        for (i = 0, len = subCookies.length; i < len; i++) {
+                            parts = subCookies[i].split("=");
+                            result[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+                        }
+
+                        return result;
+                    }
+                }
+                return null;
+            },
+            set: function (name, subName, value, expires, path, domain, secure) {
+                var subcookies = this.getAll(name) || {};
+                subcookies[subName] = value;
+                this.setAll(name, subcookies, expires, path, domain, secure);
+            },
+
+            setAll: function (name, subcookies, expires, path, domain, secure) {
+
+                var cookieText = encodeURIComponent(name) + "=",
+                    subcookieParts = new Array(),
+                    subName;
+                for (subName in subcookies) {
+                    if (subName.length > 0 && subcookies.hasOwnProperty(subName)) {
+                        subcookieParts.push(encodeURIComponent(subName) + "=" + encodeURIComponent(subcookies[subName]));
+                    }
+                }
+
+                if (subcookieParts.length > 0) {
+                    cookieText += subcookieParts.join("&");
+
+                    if (expires instanceof Date) {
+                        cookietext += "; expires=" + expires.toGMTString();
+                    }
+
+                    if (path) {
+                        cookieText += ";path=" + path;
+                    }
+
+                    if (domain) {
+                        cookieText += "; domain=" + domain;
+                    }
+
+                    if (secure) {
+                        cookieText += "; secure";
+                    }
+                } else {
+                    cookieText += "; expires=" + (new Date(0).toGMTString());
+                }
+                document.cookie = cookieText;
+            },
+            unset: function (name, subName, path, domain, secure) {
+                var subcookies = this.getAll(name);
+                if (subcookies) {
+                    delete subcookies[subName];
+                    this.setAll(name, subcookies, null, path, domain, secure);
+                }
+            },
+
+            unsetAll: function (name, path, domain, secure) {
+                this.setAll(name, null, new Date(0), path, domain, secure);
+            }
+            //省略了更多的代码
+        };
+
+        //假设document.cookie=data=name=Nicholas&book=Professional%20JavaScript
+
+        //取得全部子cookie
+        // var data = SubCookieUtil.getAll("data");
+        // alert(data.name); //"Nicholas"
+        // alert(data.book); //"Professional JavaScript"
+
+        // //逐个取得子cookie
+        // alert(SubCookieUtil.get("data", "name")); //"Nicholas"
+        // alert(SubCookieUtil.get("data", "book")); //"Professional JavaScript"
+
+
+        // //假设document.cokie=data=name=Nicholas&book=Professiona%20JavaScript
+
+        // //设置两个cookie
+        // SubCookieUtil.set("data", "name", "Nicholas");
+        // SubCookieUtil.set("data", "book", "Professional JavaScript");
+
+        // //设置全部子cookie和失效日期
+        // SubCookieUtil.setAll("data", { name: "Nicholas", book: "Professional Javascript" }, new Data("January 1, 2010"));
+
+        // //修改名字的值，并修改cookie的失效日期
+        // SubCookieUtil.set("data", "name", "Michael", new Date("February 1, 2010"));
+
+
+        // //仅删除名为name的子cookie
+        // SubCookieUtil.unset("data", "name");
+
+        // //删除整个cookie
+        // SubCookieUtil.unsetAll("data");
+
+
+
+    </script>
+</body>
+
+</html>
