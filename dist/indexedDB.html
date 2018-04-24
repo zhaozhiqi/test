@@ -16,7 +16,7 @@
 
         request = indexedDB.open("admin");
         request.onerror = function (event) {
-            alert("error" + event.target.errorCode);
+            console.log("error" + event.target.errorCode);
         }
         request.onsuccess = function (event) {
             database = event.target.result;
@@ -24,33 +24,44 @@
             if (database.version != "1.0") {
                 request = database.setVersion("1.0");
                 request.onerror = function (event) {
-                    alert("Something bad happened while trying to set version: " +
+                    console.log("Something bad happened while trying to set version: " +
                         event.target.errorCode);
                 };
                 request.onsuccess = function (event) {
-                    alert("Database initialization complete. Database name: " + database.name +
+                    console.log("Database initialization complete. Database name: " + database.name +
                         ", Version: " + database.version);
                 };
             } else {
-                alert("Database already initialized. Database name: " + database.name +
+                console.log("Database already initialized. Database name: " + database.name +
                     ", Version: " + database.version);
+            }
+
+
+
+
+
+            var user = {
+                username: "007",
+                firstName: "James",
+                lastName: "Bond",
+                password: "foo"
+            };
+
+            var store = database.createObjectStore("users", { keypath: "username" });
+
+            var i = 0,
+                len = users.length;
+
+            while (i < len) {
+                store.add(users[i++]);
             }
         }
 
-        database.onerror = function(event) {
-            // Generic error handler for all errors targeted at this database's
-            // requests!
-            alert("Database error: " + event.target.errorCode);
-        };
-        
-        var user = {
-            username: "007",
-            firstName: "James",
-            lastName: "Bond",
-            password: "foo"
-        }; 
-
-        var store = database.createObjectStore("users", {keypath: "username"});
+        // database.onerror = function(event) {
+        //     // Generic error handler for all errors targeted at this database's
+        //     // requests!
+        //     console.log("Database error: " + event.target.errorCode);
+        // };
 
 
     </script>
