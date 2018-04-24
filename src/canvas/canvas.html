@@ -7,24 +7,34 @@
     <title>canvas</title>
 </head>
 <body>
-    <h1>canvas-1</h1>
+    <!-- <h1>canvas-1</h1> -->
+    <img src="static/02.jpg" alt="img" style="width: 100px" />
     <canvas id="drawing" width="200" height="200"></canvas>
 
     <script>
         var drawing = document.getElementById('drawing');
+        var image = document.images[0];
         if(drawing.getContext){
-            var contest = drawing.getContext("2d");
-            // contest.fillStyle = "#f00";
-            // contest.fillRect(10,10,50,50);
+            var context = drawing.getContext("2d");
+        //绘制矩形    
+        /*    // context.fillStyle = "#f00";
+            // context.fillRect(10,10,50,50);
 
-            // contest.fillStyle = "rgba(0,0,255,0.5)";            
-            // contest.fillRect(30,30,50,50);
+            // context.fillStyle = "rgba(0,0,255,0.5)";            
+            // context.fillRect(30,30,50,50);
             
-            contest.strokeStyle = "#f60";
-            contest.strokeRect(10,10,50,50);
+            context.strokeStyle = "#f60";
+            context.strokeRect(10,10,50,50);
+            // context.lineCap = 'butt';//线末端形状 平头
+            // context.lineCap = 'round';//线末端形状 圆头
+            // context.lineCap = 'square';//线末端形状 方头
+            // context.lineJoin = "round";//相交方式 圆交
+            // context.lineJoin = "bevel";//相交方式 斜交
+            // context.lineJoin = "miter";//相交方式 斜接
 
-            contest.strokeStyle = "rgba(0,0,255,0.5)";            
-            contest.strokeRect(30,30,50,50);                
+            context.lineWidth = '10';//线宽
+            context.strokeStyle = "rgba(0,0,255,0.5)";            
+            context.strokeRect(30,30,50,50);                
             
             
             // var imgURL = drawing.toDataURL("image/png");
@@ -32,7 +42,187 @@
             // var image = document.createElement('img');
             // image.src = imgURL;
             // document.body.appendChild(image);
+
+
+            
+
+            context.fillStyle = "#ff0000";
+            context.fillRect(10, 10, 50, 50);//绘制红色矩形            
+
+            context.fillStyle = "rgba(0,0,255,0.5)";
+            context.fillRect(30, 30, 50, 50);//绘制半透明的蓝色矩形            
+
+            context.clearRect(40, 40, 10, 10); //在两个矩形重叠的地方清除一个小矩形
+        */
+
+        //绘制路径   
+        /*
+            // context.beginPath();//开始画线
+
+            // context.arc(100,100,99,0,2*Math.PI,false);//绘制外圆
+            
+            // context.moveTo(194,100);//绘制内圆
+            // context.arc(100,100,94,0,2*Math.PI,false);
+
+            // context.moveTo(100,100);//绘制分针
+            // context.lineTo(100,15);
+            
+            // context.moveTo(100,100);//绘制时针
+            // context.lineTo(35,100);
+
+            // context.font = "bold 14px Arial";
+            // context.textAlign = "center";
+            // context.textBaseline = "middle";
+            // context.fillText("12",100,20,18);
+
+            context.stroke();//描边路径
+
+            context.beginPath();//开始画线
+
+            context.arc(100,100,99,0,2*Math.PI,false);//绘制外圆
+
+            context.moveTo(194,100);//绘制内圆
+            context.arc(100,100,94,0,2*Math.PI,false);
+
+            context.translate(100,100);//变换原点
+            context.rotate(1);//旋转表针
+
+            context.moveTo(0,0);
+            context.lineTo(0,-85);//绘制分针
+            context.moveTo(0,0);
+            context.lineTo(-65,0);//绘制时针
+        
+            context.font = "bold 14px Arial";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            context.fillText("12",-80,0,18);
+
+            context.stroke();//描边路径
+        */
+
+
+        //绘制图像  
+        /*
+            
+            //先指定一个回调函数，图片加载好之后自然会回来执行
+            image.onload = function () {
+                //context.drawImage(image,0,0);//图片 起点x 起点y
+                //context.drawImage(image,0,0,200,200);//图片 起点x 起点y 宽 高
+                context.drawImage(image,100,100,500,500,0,0,200,200);//图片 源起点x 源起点y 源图宽 源图高 目标起点x 目标起点y  目标图片宽 目标图片高 
+                //console.log(drawing.toDataURL(),'toDataURL()');//获取链接
+            };
+            //加载图片，完成后执行刚才的函数
+            //image.src="static/00.jpg";
+        */
+        //绘制阴影
+        /*
+            context.shadowOffsetX = 5;
+            context.shadowOffsetY = 5;
+            context.shadowBlur = 4;
+            context.shadowColor = "rgba(0,0,0,0.5)";
+
+            context.fillStyle = "#ff0000";
+            context.fillRect(10,10,50,50);
+
+            context.fillStyle = "rgba(0,0,225,1)";
+            context.fillRect(30,30,50,50);
+        */
+        //渐变
+        /*
+            function createRectLinearGradient(context, x, y, width, height){
+                return context.createLinearGradient(x, y, x+width, y+height);
+            } 
+            var gradient = createRectLinearGradient(context,30,30,50,50);
+            gradient.addColorStop(0, "orange");
+            //gradient.addColorStop(0.5, "blue");
+            gradient.addColorStop(1, "yellow");
+
+            context.fillStyle = "#ff0000";
+            context.fillRect(10,10,50,50);
+
+            context.fillStyle = gradient;
+            context.fillRect(30,30,50,50);
+
+            // context.fillStyle = gradient;
+            // context.fillRect(30,30,70,70);
+        
+            var gradient = context.createRadialGradient(55, 55, 10, 55, 55, 30);
+            gradient.addColorStop(0, "white");
+            gradient.addColorStop(1, "black");
+            //绘制红色矩形
+            context.fillStyle = "#ff0000";
+            context.fillRect(10, 10, 50, 50);
+            //绘制渐变矩形
+            context.fillStyle = gradient;
+            context.fillRect(30, 30, 50, 50);
+        */
+        //模式 
+        /*            
+            image.onload = function () {
+                pattern = context.createPattern(image, "repeat");
+                context.fillStyle = pattern;
+                context.fillRect(10,10,150,150)
+            };
+        */
+        //使用图像数据
+        /*          
+            image.onload = function () {
+                var imageData, data, i, len, average, red, green, blue, alpha;            
+                context.drawImage(image, 0, 0, 200, 200);//绘制原始图像
+                //imageData = context.getImageData(0, 0, image.width, image.height);
+                imageData = context.getImageData(0, 0, 200, 200);
+                data = imageData.data;
+                for (i=0, len=data.length; i < len; i+=4){
+                    red = data[i];
+                    green = data[i+1];
+                    blue = data[i+2];
+                    alpha = data[i+3];
+                    //求得 rgb 平均值
+                    average = Math.floor((red + green + blue) / 3);
+                    //设置颜色值，透明度不变
+                    data[i] = average;
+                    data[i+1] = average;
+                    data[i+2] = average;
+                }
+
+                //回写图像数据并显示结果
+                imageData.data = data;
+                context.putImageData(imageData, 0, 0); 
+            }
+         */ 
+        //合成
+        /* 
+          
+
+         //绘制红色矩形
+        context.fillStyle = "#ff0000";
+        context.fillRect(10, 10, 50, 50);
+        //修改全局透明度
+        context.globalAlpha = 0.5;
+        //绘制蓝色矩形
+        context.fillStyle = "rgba(0,0,255,1)";
+        context.fillRect(30, 30, 50, 50);
+        //重置全局透明度
+        context.globalAlpha = 0; 
+        */
+
+
+        //WebGL
+        //WebGL上下文
+        /**/        
+        try {
+            gl = drawing.getContext("experimental-webgl");
+        } catch (ex) {
+        //什么也不做
         }
+        if (gl){
+        //使用 WebGL
+        } else {
+            console.log("WebGL context could not be created.");
+        }   
+                 
+    }
     </script>
+    <script src="bundle.js"></script>
 </body>
 </html>
