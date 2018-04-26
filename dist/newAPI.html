@@ -16,8 +16,13 @@
 </head>
 
 <body>
-    <div id="status">0</div>
-    <div id="output">0</div>
+    <div id="status"></div>
+    <div id="output"></div>
+    <input type="file" multiple id="files-list" />
+    <div id="output-I"></div>
+    <div id="progress"></div>
+    <div id="dragdropget" style="width:300px;height: 300px;background: yellowgreen"></div>
+
     <script>
         (function () {
             var EventUtil = {
@@ -117,7 +122,7 @@
 
             };
 
-
+            //requestAnimationFrame()
             function updataProgress() {
                 var div = document.getElementById("status");
                 div.style.width = (parseInt(div.style.width, 10) + 5) + "%";
@@ -151,34 +156,235 @@
 
 
 
+            //Page Visibility API
 
-            function isHiddentSupported() {
-                return typeof (document.hidden || document.msHidden || document.webkitHidden) != "undefined";
-            }
 
-            if (document.hidden || document.msHidden || document.webkitHidden) {
-                console.log("页面被隐藏");
-            } else {
-                console.log("页面未隐藏");
-            }
+            // function isHiddentSupported() {
+            //     return typeof (document.hidden || document.msHidden || document.webkitHidden) != "undefined";
+            // }
+
+            // if (document.hidden || document.msHidden || document.webkitHidden) {
+            //     console.log("页面被隐藏");
+            // } else {
+            //     console.log("页面未隐藏");
+            // }
 
             function handleVisibilityChange() {
                 var output = document.getElementById("output"),
                     msg;
 
                 if (document.hidden || document.msHidden || document.webkitHidden) {
-                    msg = "Page is now hidden" + (new Date()) + "<br/>";
+                    msg = "页面现在隐藏" + (new Date()) + "<br/>";
+                    document.title = "死鬼，快回来";
                 } else {
-                    msg = "Page is now visible" + (new Date()) + "<br/>";
+                    msg = "页面现在显示" + (new Date()) + "<br/>";
+                    document.title = "哼，回来干嘛 接着去找你那个小妖精去啊";
                 }
 
-                output.innerHTML = msg;
+                output.innerHTML += msg;
 
 
             }
 
             EventUtil.addHandler(document, "msvisibilitychange", handleVisibilityChange);
             EventUtil.addHandler(document, "webkitvisibilitychange", handleVisibilityChange);
+
+
+            //Geolocation API
+            navigator.geolocation.getCurrentPosition(function (position) {
+                drawMapCenterAt(position.coords.latitude, position.coords.longitude);
+            }, function (error) {
+                console.log("Error code:" + error.code);
+                console.log("Error message:" + error.message);
+            }, {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 25000
+                })
+
+            // var watchId = navigator.geolocation.watchPosition(function(position){
+            //     drawMapCenterAt(position.latitude, position.longitude);
+            // }, function(error){
+            //     console.log("Error code:" + error.code);
+            //     console.log("Error message:" + error.message);
+            // })
+
+            // cleraWatch(watchId);
+
+
+            //File API
+
+            // var  filesList = document.getElementById("files-list");
+            // EventUtil.addHandler(filesList, "change", function (event){
+            //     var files =EventUtil.getTarget(event).files,
+            //     i = 0,
+            //     len = files.length;
+
+            //     while (i <len) {
+            //         console.log(files[i].name + " (" + files[i].type + "," + files[i].size + " bytes) ");
+            //         i++
+            //     }
+            // });
+
+            var filesList = document.getElementById("files-list");
+            // EventUtil.addHandler(filesList, "change", function (event){
+            //     var info = "",
+            //         output = document.getElementById("output-I"),
+            //         progress = document.getElementById("progress"),
+            //         files =EventUtil.getTarget(event).files,
+            //         type = "default",
+            //         reader = new FileReader();
+
+            //     if(/image/.test(files[0].type)){
+            //         reader.readAsDataURL(files[0]);
+            //         type = "image";
+            //     }else{
+            //         reader.readAsText(files[0]);
+            //         type = "text";
+            //     }
+
+            //     reader.onerror = function(){
+            //         output.innerHTML = "不能读取文件 error code 是：" + reader.error.code;
+            //     }
+
+            //     reader.onprogress = function (event) {
+            //         if(event.lengthComputable){
+            //             progress.innerHTML = event.loaded + "/" + event.total;
+            //         }
+            //     }
+
+            //     reader.onload = function(){
+            //         var html = "";
+            //         switch (type) {
+            //             case "image":
+            //                 html = "<img style=\"width:250px;\" src=\"" + reader.result + "\">";
+            //                 break;
+
+            //             case "text":
+            //                 html = reader.result;
+            //                 break;
+
+            //             default:
+            //                 break;
+            //         }
+            //         output.innerHTML = html;
+            //     }
+            // });
+
+            //兼容slice()事件
+            function blobSlice(blob, startByte, length) {
+                if (blob.slice) {
+                    return blob.slice(startByte, length);
+                } else if (blob.webkitSlice) {
+                    return blob.webkitSlice(startByte, length);
+                } else if (blob.mozSlice) {
+                    return blob.mozSlice(startByte, length);
+                } else {
+                    return null;
+                }
+            }
+            //读取部分文件
+            // EventUtil.addHandler(filesList, "change", function (event) {
+            //     var info = "",
+            //         output = document.getElementById("output-I"),
+            //         progress = document.getElementById("progress"),
+            //         files = EventUtil.getTarget(event).files,
+            //         type = "default",
+            //         reader = new FileReader(),
+            //         blob = blobSlice(files[0], 0, 32);
+
+            //     if(blob){
+            //         reader.readAsText(blob);
+
+            //         reader.onerror = function () {
+            //             output.innerHTML = "不能读取文件 error code 是：" + reader.error.code;
+            //         }
+
+            //         reader.onload = function () {
+            //             var html = "";
+            //             html = reader.result;
+            //             output.innerHTML = html;
+            //         }
+            //     }else{
+            //         alert("浏览器不支持 slice()")
+            //     }
+
+            // });
+
+            //对象URL
+            function createObjectURL(url){
+                if (window.URL){
+                    return window.URL.createObjectURL(url);
+                }else if(window.webkitURL){
+                    return window.webkitURL.createObjectURL(url);
+                }else{
+                    return null;
+                }
+            }
+            function revokeObjectURL(url){
+                if (window.URL){
+                    return window.URL.revokeObjectURL(url);
+                }else if(window.webkitURL){
+                    return window.webkitURL.revokeObjectURL(url);
+                }else{
+                    return null;
+                }
+            }
+            EventUtil.addHandler(filesList, "change", function (event) {
+                var info = "",
+                    output = document.getElementById("output-I"),
+                    progress = document.getElementById("progress"),
+                    files = EventUtil.getTarget(event).files,
+                    type = "default",
+                    reader = new FileReader(),
+                    url = createObjectURL(files[0]);
+
+
+                if(url){
+                    if(/image/.test(files[0].type)){
+                        output.innerHTML = "<img style=\"width:250px;\" src=\"" + url + "\">";
+                    }else{
+                        output.innerHTML = "Not an image";
+                    }
+                }else{
+                    output.innerHTML ="浏览器不支持 URls";
+                }
+
+            });        
+
+            //读取拖放文件
+
+            var dragdropget = document.getElementById("dragdropget");
+
+            function handleEvent(event){
+                var info = "",
+                    output = document.getElementById("output-I"),
+                    files, i, len;
+                    EventUtil.preventDefault(event);
+                    EventUtil.stopPropagation(event);
+                    if(event.type == "drop") {
+                        files = event.dataTransfer.files;
+                        i = 0 ;
+                        len = files.length;
+                        console.log(files,i,len);
+
+                        while (i < len) {
+                            var url = createObjectURL(files[i]);
+                            info += files[i].name + " (" + files[i].type + ", " +files[i].size + " bytes)<br/>";
+                            if(/image/.test(files[i].type)){
+                                info += "<img style=\"width:250px;\" src=\"" + url + "\">";
+                            }else{
+                                info += "Not an image";
+                            }
+                            i++;
+                        }
+                    }
+                    output.innerHTML = info;
+            }   
+
+            EventUtil.addHandler(dragdropget, "dragenter", handleEvent);
+            EventUtil.addHandler(dragdropget, "dragover", handleEvent);
+            EventUtil.addHandler(dragdropget, "drop", handleEvent);
         })();
     </script>
 </body>
