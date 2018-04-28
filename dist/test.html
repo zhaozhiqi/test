@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        var name = "The Window";     
+
+        var object = {　　　　
+            name: "My Object",
+            getNameFunc: function () {　　　　　　
+                return function () {　　　　　　　　
+                    return this.name;　　　　　　
+                };            　　　　
+            }
+            　　
+        };
+        　　
+        console.log('object',object.getNameFunc()());// "The Window"
+        console.log('object',object.getNameFunc());// object "ƒ () {return this.name;}"
+
+        var object1 = {　　　　
+            name: "My Object",
+            getNameFunc: function () {　　
+                return this.name;         　　　　
+            }
+            　　
+        };
+
+        console.log('object1',object.getNameFunc());// object1 "ƒ () {return this.name;}"
+
+    　　var object2 = {
+    　　　　name : "My Object",
+
+    　　　　getNameFunc : function(){
+    　　　　　　var that = this;
+    　　　　　　return function(){
+    　　　　　　　　return that.name;
+    　　　　　　};
+
+    　　　　}
+
+    　　};
+
+        console.log('object2',object.getNameFunc()());//  "The Window"
+        console.log('object2',object.getNameFunc());//  object2 "ƒ () {return this.name;}"
+
+    </script>
+</body>
+
+</html>
